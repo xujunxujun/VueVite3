@@ -6,7 +6,6 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { ref, reactive, unref } from 'vue'
 import { Form, FormExpose } from '@/components/Form'
 import { useValidator } from '@/hooks/web/useValidator'
-import { getDictOneApi } from '@/api/common'
 import { FormSchema } from '@/types/form'
 
 const { required } = useValidator()
@@ -96,14 +95,6 @@ const schema = reactive<FormSchema[]>([
     label: t('formDemo.timeSelect')
   }
 ])
-
-const getDictOne = async () => {
-  const res = await getDictOneApi()
-  if (res) {
-    schema[1].componentProps!.options = res.data
-  }
-}
-getDictOne()
 
 const formRef = ref<FormExpose>()
 

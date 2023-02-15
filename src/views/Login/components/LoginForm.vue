@@ -3,36 +3,45 @@ import { reactive, ref, unref, watch } from 'vue'
 import { Form } from '@/components/Form'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElButton, ElCheckbox, ElLink } from 'element-plus'
+import { required } from '@/utils/formRules'
 import { useForm } from '@/hooks/web/useForm'
-import { loginApi, getTestRoleApi, getAdminRoleApi } from '@/api/login'
+import { Login } from '@/api/login'
+import type { UserLoginType } from '@/api/login/types'
 import { useCache } from '@/hooks/web/useCache'
-import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useRouter } from 'vue-router'
 import type { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
-import { UserType } from '@/api/login/types'
-import { useValidator } from '@/hooks/web/useValidator'
+import { useAppStore } from '@/store/modules/app'
+import { layer } from '@layui/layer-vue'
+import { useTagsViewStore } from '@/store/modules/tagsView'
+import { resetRouter } from '@/router'
 import { FormSchema } from '@/types/form'
 
-const { required } = useValidator()
-
- 
-
 const appStore = useAppStore()
-
+const tagsViewStore = useTagsViewStore()
 const permissionStore = usePermissionStore()
 
 const { currentRoute, addRoute, push } = useRouter()
 
-const { wsCache } = useCache()
-
 const { t } = useI18n()
 
-const rules = {
-  username: [required()],
-  password: [required()]
-}
+// 自定义验证
 
+const validateCode = (_rule: any, _value: any, callback: any) => {
+  if (!CodeNumber.value) {
+    callback(new Error(t('common.required')))
+  }
+
+  callback()
+}
+// 表单验证
+const rules = {
+  username: [required],
+  password: [required],
+  code: [{ validator: validateCode, trigger: 'blur' }]
+}
+// 验证码
+const CodeNumber = ref()
 const schema = reactive<FormSchema[]>([
   {
     field: 'title',
@@ -67,6 +76,7 @@ const schema = reactive<FormSchema[]>([
       placeholder: t('login.passwordPlaceholder')
     }
   },
+
   {
     field: 'tool',
     colProps: {
@@ -78,17 +88,28 @@ const schema = reactive<FormSchema[]>([
     colProps: {
       span: 24
     }
-  },
- 
+  }
+  // {
+  //   field: 'other',
+  //   component: 'Divider',
+  //   label: t('login.otherLogin'),
+  //   componentProps: {
+  //     contentPosition: 'center'
+  //   }
+  // },
+  // {
+  //   field: 'otherIcon',
+  //   colProps: {
+  //     span: 24
+  //   }
+  // }
 ])
- 
 
 const remember = ref(false)
 
 const { register, elFormRef, methods } = useForm()
 
 const loading = ref(false)
- 
 
 const redirect = ref<string>('')
 
@@ -101,69 +122,54 @@ watch(
     immediate: true
   }
 )
+//表单数据
+const formData = ref<UserLoginType>({
+  username: '',
+  password: ''
+})
 
 // 登录
 const signIn = async () => {
+  tagsViewStore.delAllViews()
+  resetRouter() // 重置静态路由表
   const formRef = unref(elFormRef)
   await formRef?.validate(async (isValid) => {
     if (isValid) {
+      const { wsCache } = useCache()
+      wsCache.clear()
+
       loading.value = true
       const { getFormData } = methods
-      const formData = await getFormData<UserType>()
+      formData.value = await getFormData<UserLoginType>()
 
-      try {
-        const res = await loginApi(formData)
-
-        if (res) {
-          wsCache.set(appStore.getUserInfo, res.data)
-          // 是否使用动态路由
-          if (appStore.getDynamicRouter) {
-            getRole()
-          } else {
-            await permissionStore.generateRoutes('none').catch(() => {})
+      await Login(formData.value)
+        .then((res) => {
+          if (res && res?.status === 200) {
             permissionStore.getAddRouters.forEach((route) => {
               addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
             })
             permissionStore.setIsAddRouters(true)
+            // wsCache.set(appStore.getUserInfo, res.data)
+
+            wsCache.set(appStore.getUserInfo, res.data.token, { exp: 60 * res.data.expires * 1000 })
+
             push({ path: redirect.value || permissionStore.addRouters[0].path })
+
+            layer.notifiy({
+              title: 'Success',
+              content: t('message.result.loginsuccess'),
+              icon: 1,
+              time: 2000
+            })
           }
-        }
-      } finally {
-        loading.value = false
-      }
+        })
+        .catch((err) => {})
+        .finally(() => (loading.value = false))
     }
   })
 }
 
-// 获取角色信息
-const getRole = async () => {
-  const { getFormData } = methods
-  const formData = await getFormData<UserType>()
-  const params = {
-    roleName: formData.username
-  }
-  // admin - 模拟后端过滤菜单
-  // test - 模拟前端过滤菜单
-  const res =
-    formData.username === 'admin' ? await getAdminRoleApi(params) : await getTestRoleApi(params)
-  if (res) {
-    const { wsCache } = useCache()
-    const routers = res.data || []
-    wsCache.set('roleRouters', routers)
-
-    formData.username === 'admin'
-      ? await permissionStore.generateRoutes('admin', routers).catch(() => {})
-      : await permissionStore.generateRoutes('test', routers).catch(() => {})
-
-    permissionStore.getAddRouters.forEach((route) => {
-      addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
-    })
-    permissionStore.setIsAddRouters(true)
-    push({ path: redirect.value || permissionStore.addRouters[0].path })
-  }
-}
-
- 
+defineExpose({})
 </script>
 
 <template>
@@ -173,7 +179,6 @@ const getRole = async () => {
     label-position="top"
     hide-required-asterisk
     size="large"
-    class="dark:(border-1 border-[var(--el-border-color)] border-solid)"
     @register="register"
   >
     <template #title>
@@ -188,14 +193,10 @@ const getRole = async () => {
     </template>
 
     <template #login>
-      <div class="w-[100%]">
-        <ElButton :loading="loading" type="primary" class="w-[100%]" @click="signIn">
-          {{ t('login.login') }}
-        </ElButton>
-      </div>
-     
+      <ElButton :loading="loading" type="primary" class="w-[100%]" @click="signIn">
+        {{ t('login.login') }}
+      </ElButton>
     </template>
- 
   </Form>
 </template>
 
@@ -204,5 +205,10 @@ const getRole = async () => {
   &:hover {
     color: var(--el-color-primary) !important;
   }
+}
+
+.code {
+  cursor: pointer;
+  margin-left: 10px;
 }
 </style>

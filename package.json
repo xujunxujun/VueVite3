@@ -5,14 +5,13 @@
   "author": "1226974252@qq.com",
   "private": false,
   "scripts": {
-
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"  
-  
+    "preview": "vite preview"
   },
   "dependencies": {
     "@iconify/iconify": "^3.0.1",
+    "@layui/layui-vue": "^1.8.7",
     "@vueuse/core": "^9.10.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.10",
@@ -24,7 +23,7 @@
     "element-plus": "2.2.28",
     "intro.js": "^6.0.0",
     "lodash-es": "^4.17.21",
-    "mitt": "^3.0.0", 
+    "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.29",
     "qrcode": "^1.5.1",
@@ -81,7 +80,7 @@
     "unplugin-vue-define-options": "^1.1.4",
     "vite": "4.0.4",
     "vite-plugin-ejs": "^1.6.4",
-    "vite-plugin-eslint": "^1.8.1", 
+    "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-progress": "^0.0.6",
     "vite-plugin-purge-icons": "^0.9.2",
     "vite-plugin-style-import": "2.0.0",

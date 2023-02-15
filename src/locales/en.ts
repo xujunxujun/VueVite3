@@ -1,4 +1,41 @@
 export default {
+  message: {
+
+    tip: {
+      nodata: 'There is no data',
+      loaderror: 'Load failed',
+      inputarray: 'Please input Array [0,0,0]',
+      inputrole: 'Please input Role',
+      inputname: 'Please input Name',
+      length: 'Length Should Be ',
+      inputaccount: 'Please input Account',
+      inputpassword: 'Please input PassWord',
+      selectavatar: 'Please Upload Avatar',
+      selectdepartment: 'Please Select Department',
+      selecterole: 'Please Select Role',
+      checkpassword: 'Please Check the Password',
+      machpassword: 'Password field does not match Verify Password field'
+    },
+    ask: {
+      delNoData: 'Please select the data to delete',
+      delData: 'Whether to delete',
+
+    },
+    result: {
+      success: 'Success',
+      upload: 'Upload',
+      updatesuccess: 'The update was successful',
+      createsuccess: 'The new creation is successful',
+      canceldel: 'Cancel the deletion',
+      cancelupdate: 'Cancel the Update',
+      deletesuccess: 'The deletion was successful',
+      loginsuccess: 'Login successful',
+      loginfailed: 'Login failed',
+      formaterror: 'Format error',
+      toolarge: 'The file is too large'
+    }
+
+  },
   common: {
     inputText: 'Please input',
     selectText: 'Please select',

@@ -7,7 +7,7 @@ import { useNProgress } from '@/hooks/web/useNProgress'
 import { usePermissionStoreWithOut } from '@/store/modules/permission'
 import { useDictStoreWithOut } from '@/store/modules/dict'
 import { usePageLoading } from '@/hooks/web/usePageLoading'
-import { getDictApi } from '@/api/common'
+
 
 const permissionStore = usePermissionStoreWithOut()
 
@@ -36,12 +36,7 @@ router.beforeEach(async (to, from, next) => {
       }
 
       if (!dictStore.getIsSetDict) {
-        // 获取所有字典
-        const res = await getDictApi()
-        if (res) {
-          dictStore.setDictObj(res.data)
-          dictStore.setIsSetDict(true)
-        }
+
       }
 
       // 开发者可根据实际情况进行修改

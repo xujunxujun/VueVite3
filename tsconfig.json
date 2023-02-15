@@ -21,21 +21,21 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
     "paths": {
+      "/@/*": ["src/*"],
       "@/*": ["src/*"]
     },
+
     "types": [
-      "@intlify/unplugin-vue-i18n/types",
+      "@intlify/vite-plugin-vue-i18n/client",
       "vite/client",
       "element-plus/global",
       "@types/intro.js",
       "@types/qrcode",
       "vite-plugin-svg-icons/client",
-      "unplugin-vue-define-options/macros-global",
-      "unplugin-vue-define-options" ,
-      "unplugin-vue-define-options/vite"
+      "unplugin-vue-define-options"
     ],
     "typeRoots": ["./node_modules/@types/", "./types"]
   },
-  "include": ["src/**/*", "types/**/*.d.ts"],
+  "include": ["src/**/*", "types/**/*.d.ts", "public/ht/core/htconfig.js"],
   "exclude": ["dist", "node_modules"]
 }

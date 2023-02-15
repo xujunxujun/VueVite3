@@ -16,6 +16,10 @@ import { setupGlobCom } from '@/components'
 // 引入element-plus
 import { setupElementPlus } from '@/plugins/elementPlus'
 
+// 引入Layui  
+import Layui from '@layui/layui-vue';
+import '@layui/layui-vue/lib/index.css';
+
 // 引入全局样式
 import '@/styles/index.less'
 
@@ -39,7 +43,7 @@ const setupAll = async () => {
   const app = createApp(App)
 
   await setupI18n(app)
-
+  app.use(Layui)
   setupStore(app)
 
   setupGlobCom(app)

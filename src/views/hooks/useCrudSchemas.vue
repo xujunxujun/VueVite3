@@ -10,7 +10,6 @@ import { TableData } from '@/api/table/types'
 import { h, ref, reactive } from 'vue'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { useDictStore } from '@/store/modules/dict'
-import { getDictOneApi } from '@/api/common'
 import { TableColumn } from '@/types/table'
 
 const dictStore = useDictStore()
@@ -125,18 +124,7 @@ const crudSchemas = reactive<CrudSchema[]>([
       dictName: 'importance'
     }
   },
-  {
-    field: 'importance3',
-    label: `${t('tableDemo.importance')}3`,
-    search: {
-      show: true,
-      component: 'Select',
-      api: async () => {
-        const res = await getDictOneApi()
-        return res.data
-      }
-    }
-  },
+
   {
     field: 'pageviews',
     label: t('tableDemo.pageviews'),

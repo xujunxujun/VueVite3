@@ -7,6 +7,10 @@ module.exports = defineConfig({
     node: true,
     es6: true
   },
+  globals: {
+    ht: true
+  },
+
   parser: 'vue-eslint-parser',
   parserOptions: {
     parser: '@typescript-eslint/parser',
@@ -24,8 +28,8 @@ module.exports = defineConfig({
     'plugin:prettier/recommended'
   ],
   rules: {
+    'prettier/prettier': 'off',
     'vue/script-setup-uses-vars': 'error',
-    'vue/no-reserved-component-names': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
@@ -64,6 +68,6 @@ module.exports = defineConfig({
       }
     ],
     'vue/multi-word-component-names': 'off',
-    'vue/no-v-html': 'off'
+    'vue/no-reserved-component-names': 'off'
   }
 })

@@ -42,6 +42,45 @@ export default {
     delNoData: '请选择需要删除的数据',
     delSuccess: '删除成功'
   },
+  message: {
+    tip: {
+      nodata: '无数据',
+      loaderror: '加载失败',
+      inputarray: '输入数组 [0,0,0]',
+      inputrole: '请输入角色',
+      inputname: '请输入名字',
+      length: '长度在 ',
+      inputaccount: '请输入账号',
+      inputpassword: '请输入密码',
+      selectdepartment: '请选择部门',
+      selecterole: '请选择角色',
+      checkpassword: '请检查密码',
+      machpassword: '密码输入不一致',
+      selectavatar: '请上传头像',
+    },
+    ask: {
+      delNoData: '请选择需要删除的数据',
+      delData: '是否删除',
+
+
+    },
+    result: {
+      success: '成功',
+      upload: '上传',
+      updatesuccess: '更新成功',
+      createsuccess: '新建成功',
+      canceldel: '取消删除',
+      cancelupdate: '取消修改',
+      deletesuccess: '删除成功',
+      loginsuccess: '登陆成功',
+      loginfailed: '登陆失败',
+      formaterror: '格式错误',
+      toolarge: '文件过大'
+    }
+
+
+
+  },
   error: {
     noPermission: `抱歉，您无权访问此页面。`,
     pageError: '抱歉，您访问的页面不存在。',

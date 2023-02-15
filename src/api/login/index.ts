@@ -1,31 +1,29 @@
 import request from '@/config/axios'
-import type { UserType } from './types'
 
-interface RoleParams {
-  roleName: string
+import type { UserLoginType } from './types'
+
+const api = {
+  Login: "/api/Login", // 获取设备分类
+  logout: '/api/Login/loginOut' // 退出系统
+};
+
+// 获取设备分类
+export function Login(param: UserLoginType) {
+
+  return request.post({
+    url: api.Login,
+    data: {
+      user: param.username,
+      password: param.password,
+    },
+  });
 }
 
-export const loginApi = (data: UserType): Promise<IResponse<UserType>> => {
-  return request.post({ url: '/user/login', data })
+
+export const loginOutApi = () => {
+  return request.get({ url: api.logout })
 }
 
-export const loginOutApi = (): Promise<IResponse> => {
-  return request.get({ url: '/user/loginOut' })
-}
 
-export const getUserListApi = ({ params }: AxiosConfig) => {
-  return request.get<{
-    total: number
-    list: UserType[]
-  }>({ url: '/user/list', params })
-}
 
-export const getAdminRoleApi = (
-  params: RoleParams
-): Promise<IResponse<AppCustomRouteRecordRaw[]>> => {
-  return request.get({ url: '/role/list', params })
-}
 
-export const getTestRoleApi = (params: RoleParams): Promise<IResponse<string[]>> => {
-  return request.get({ url: '/role/list', params })
-}
