@@ -10,7 +10,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
   {
     path: '/',
     component: Layout,
-    redirect: '/Three',
+    redirect: '/dashboard/home',
     name: 'Root',
     meta: {
       hidden: true
@@ -59,29 +59,29 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
 
 
   {
-    path: '/Three',
+    path: '/dashboard',
     component: Layout,
-    redirect: '/Three/edit',
-    name: 'Resource',
+    redirect: '/dashboard/home',
+    name: 'Dashboard',
     meta: {
-      title: t('router.threedimensional'),
-      icon: 'mdi:rotate-3d'
+      title: t('router.dashboard'),
+      icon: 'ant-design:dashboard-filled',
+      alwaysShow: true
     },
     children: [
-
       {
-        path: 'edit',
-        name: 'Edit',
-        component: () => import('@/views/Error/403.vue'),
+        path: 'home',
+        component: () => import('@/views/Dashboard/index.vue'),
+        name: 'Analysis',
         meta: {
-          title: t('router.edit'),
-          icon: 'material-symbols:edit-document-outline'
+          title: t('router.analysis'),
+          noCache: true,
+          affix: true
         }
       },
 
     ]
   },
-
 
 
 

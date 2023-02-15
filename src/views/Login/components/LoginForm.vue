@@ -142,9 +142,10 @@ const signIn = async () => {
       const { getFormData } = methods
       formData.value = await getFormData<UserLoginType>()
 
-      await Login(formData.value)
-        .then((res) => {
+      Login(formData.value)
+        .then(async (res) => {
           if (res && res?.status === 200) {
+            await permissionStore.generateRoutes().catch(() => {})
             permissionStore.getAddRouters.forEach((route) => {
               addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
             })
@@ -163,7 +164,7 @@ const signIn = async () => {
             })
           }
         })
-        .catch((err) => {})
+        .catch((_err) => {})
         .finally(() => (loading.value = false))
     }
   })
